@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mensaje</title>
+
+<style>
+
+body{
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+#mensaje{
+font-size:60px;
+color:#00ffff;
+text-align:center;
+text-shadow:
+0 0 5px #00ffff,
+0 0 10px #00ffff,
+0 0 20px #00ffff,
+0 0 40px #00ffff,
+0 0 80px #00ffff;
+animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow{
+from{
+text-shadow:
+0 0 5px #00ffff,
+0 0 10px #00ffff,
+0 0 20px #00ffff;
+}
+to{
+text-shadow:
+0 0 20px #00ffff,
+0 0 40px #00ffff,
+0 0 80px #00ffff;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="mensaje"></div>
+
+<script>
+
+let visto = localStorage.getItem("mensaje_visto");
+const contenedor = document.getElementById("mensaje");
+
+if(visto){
+contenedor.innerText = "Ya no se puede ver el mensaje";
+}
+else{
+
+const texto = "Alguien como tú";
+const palabras = texto.split(" ");
+
+let i = 0;
+
+function mostrar(){
+
+if(i < palabras.length){
+
+contenedor.innerText = palabras[i];
+i++;
+
+setTimeout(mostrar,1500);
+
+}
+else{
+
+localStorage.setItem("mensaje_visto","true");
+
+setTimeout(function(){
+location.reload();
+},1500);
+
+}
+
+}
+
+mostrar();
+
+}
+
+</script>
+
+</body>
+</html>
