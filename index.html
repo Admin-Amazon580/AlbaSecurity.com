@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mensaje</title>
 
 <style>
@@ -14,6 +15,8 @@ align-items:center;
 height:100vh;
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
+flex-direction:column;
+color:white;
 }
 
 #mensaje{
@@ -26,22 +29,14 @@ text-shadow:
 0 0 20px #00ffff,
 0 0 40px #00ffff,
 0 0 80px #00ffff;
-animation: glow 1.5s infinite alternate;
 }
 
-@keyframes glow{
-from{
-text-shadow:
-0 0 5px #00ffff,
-0 0 10px #00ffff,
-0 0 20px #00ffff;
-}
-to{
-text-shadow:
-0 0 20px #00ffff,
-0 0 40px #00ffff,
-0 0 80px #00ffff;
-}
+button{
+padding:12px 25px;
+font-size:18px;
+cursor:pointer;
+border:none;
+border-radius:6px;
 }
 
 </style>
@@ -49,17 +44,36 @@ text-shadow:
 
 <body>
 
+<button id="verBtn">Ver mensaje</button>
 <div id="mensaje"></div>
 
 <script>
 
-let visto = localStorage.getItem("mensaje_visto");
+const btn = document.getElementById("verBtn");
 const contenedor = document.getElementById("mensaje");
 
-if(visto){
-contenedor.innerText = "Ya no se puede ver el mensaje";
+const tiempoBloqueo = 55 * 60 * 60 * 1000; // 55 horas
+
+let ultimaVez = localStorage.getItem("mensaje_tiempo");
+
+function disponible(){
+
+if(!ultimaVez) return true;
+
+let ahora = Date.now();
+return (ahora - ultimaVez) > tiempoBloqueo;
+
 }
-else{
+
+btn.onclick = function(){
+
+if(!disponible()){
+contenedor.innerText = "Ya no se puede ver el mensaje";
+btn.style.display = "none";
+return;
+}
+
+btn.style.display = "none";
 
 const texto = "Alguien como tú";
 const palabras = texto.split(" ");
@@ -75,13 +89,12 @@ i++;
 
 setTimeout(mostrar,1500);
 
-}
-else{
+}else{
 
-localStorage.setItem("mensaje_visto","true");
+localStorage.setItem("mensaje_tiempo", Date.now());
 
 setTimeout(function(){
-location.reload();
+contenedor.innerText = "Ya no se puede ver el mensaje";
 },1500);
 
 }
